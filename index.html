@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Contrôle Pince Robotique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 20px;
+    }
+
+    button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Contrôle de la Pince</h1>
+  <div class="controls">
+    <button onclick="sendCommand('open')">Ouvrir</button>
+    <button onclick="sendCommand('close')">Fermer</button>
+  </div>
+  <div id="status">En attente de commande...</div>
+
+  <script>
+    const esp32IP = 'http://192.168.1.42'; // ← Remplace avec l'IP de ton ESP32
+
+    function sendCommand(action) {
+      fetch(`${esp32IP}/${action}`)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('status').textContent = `Commande "${action}" envoyée : ${data}`;
+        })
+        .catch(error => {
+          console.error("Erreur:", error);
+          document.getElementById('status').textContent = `Erreur lors de la commande "${action}"`;
+        });
+    }
+  </script>
+</body>
+</html>
